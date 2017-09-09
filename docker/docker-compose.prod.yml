@@ -1,0 +1,53 @@
+version: '2'
+
+services:
+  typo3-redis:
+    restart: on-failure
+
+  typo3-mysql-main:
+    restart: on-failure
+
+  typo3-mysql-sys:
+    restart: on-failure
+
+  typo3-mysql-index:
+    restart: on-failure
+
+#  typo3-mysql-sales:
+#    restart: on-failure
+
+  typo3-webserver:
+    ports:
+      - "80:80"
+    # Make nginx "see" the index.php files to open urls like http://domain.tld/ without index.php in URI
+    volumes:
+      - fallback-index-php:/var/www/docker-typo3/web/index.php
+      - fallback-index-php:/var/www/docker-typo3/web/typo3/index.php
+    restart: on-failure
+
+  typo3-php-fpm:
+    build:
+      context: ..
+      dockerfile: docker/php-fpm/prod/Dockerfile
+    environment:
+      - TYPO3_CONTEXT=${TYPO3_CONTEXT}
+    volumes:
+      - typo3-web-fileadmin:/var/www/docker-typo3/web/fileadmin
+      - typo3-web-typo3conf-l10n:/var/www/docker-typo3/web/typo3conf/l10n
+      - typo3-web-uploads:/var/www/docker-typo3/web/uploads
+
+      - typo3-tmp-assets-t3sys:/var/www/docker-typo3/web/typo3/sysext
+      - typo3-tmp-assets-ext:/var/www/docker-typo3/web/typo3conf/ext
+      - typo3-tmp-assets-t3temp:/var/www/docker-typo3/web/typo3temp/assets
+    restart: on-failure
+
+volumes:
+  typo3-web-fileadmin:
+  typo3-web-typo3conf-l10n:
+  typo3-web-uploads:
+
+  typo3-tmp-assets-t3sys:
+  typo3-tmp-assets-ext:
+  typo3-tmp-assets-t3temp:
+
+  fallback-index-php:

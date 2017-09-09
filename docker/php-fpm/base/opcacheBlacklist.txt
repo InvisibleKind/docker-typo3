@@ -1,0 +1,6 @@
+; Matches a specific file.
+/var/www/docker-typo3/web/typo3conf/LocalConfiguration.php
+/var/www/docker-typo3/web/typo3conf/PackageStates.php
+
+; A prefix that matches all files starting
+/var/www/docker-typo3/web/typo3temp/

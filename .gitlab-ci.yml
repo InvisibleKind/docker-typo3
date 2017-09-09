@@ -1,0 +1,35 @@
+stages:
+  - test
+  - build
+  - deploy
+
+test:
+  stage: test
+  script: 'echo "Add PHPUnit and CI-Runner Docker integration, like here: https://gitlab.com/gitlab-org/gitlab-ci-yml/blob/master/PHP.gitlab-ci.yml | https://docs.gitlab.com/ee/ci/docker/using_docker_images.html"'
+
+build:
+  stage: build
+  script: 'echo "Move here composer install, run some css/js compilation/transpiling, build php-fpm container (end eventually all custom containers), pusht it to Private repo (ECS, Gitlab)"'
+  only:
+  - master
+
+deploy_staging:
+  stage: deploy
+  script:
+    - ssh -i /sshkeys/docker-typo3.pem ec2-user@docker-typo3.stage "cd /home/docker-typo3 && git pull && ./docker/deploy.sh"
+  environment:
+    name: staging
+    url: http://docker-typo3.stage/
+  only:
+  - master
+
+deploy_prod:
+  stage: deploy
+  script:
+    - ssh user@server "cd /path/to/project && git pull && ./docker/deploy.sh"
+  environment:
+    name: production
+    url: https://docker-typo3.de
+  #when: manual
+  only:
+  - release

@@ -1,0 +1,86 @@
+###############################################################################
+#                          Generated on phpdocker.io                          #
+###############################################################################
+# Note: consider awslogs driver for login in Amazon Cloud
+version: '2'
+
+services:
+  typo3-redis:
+    image: redis:alpine
+    container_name: typo3-redis
+    #user: redis
+
+  typo3-mysql-main:
+    build:
+      context: ./mysql
+    container_name: typo3-mysql-main
+    volumes:
+      - typo3-main-db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=mcwHBxpKznMXb3U2
+      - MYSQL_DATABASE=typo3-main
+      - MYSQL_USER=typo3
+      - MYSQL_PASSWORD=xui622zAz7Gtgu5Y
+    #user: mysql
+
+  typo3-mysql-sys:
+    #image: mariadb:latest
+    build:
+      context: ./mysql
+    container_name: typo3-mysql-sys
+    volumes:
+      - typo3-sys-db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=mcwHBxpKznMXb3U2
+      - MYSQL_DATABASE=typo3-sys
+      - MYSQL_USER=typo3
+      - MYSQL_PASSWORD=xui622zAz7Gtgu5Y
+    #command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci --init-connect='SET NAMES UTF8;'
+    #user: mysql
+
+  typo3-mysql-index:
+    build:
+      context: ./mysql
+    container_name: typo3-mysql-index
+    volumes:
+      - typo3-index-db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=mcwHBxpKznMXb3U2
+      - MYSQL_DATABASE=typo3-index
+      - MYSQL_USER=typo3
+      - MYSQL_PASSWORD=xui622zAz7Gtgu5Y
+
+  typo3-webserver:
+    image: nginx:alpine
+    container_name: typo3-webserver
+    volumes_from:
+      - typo3-php-fpm
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd
+    depends_on:
+      - typo3-php-fpm
+    #user: nginx
+
+  typo3-php-fpm-base:
+    build:
+      context: ./php-fpm/base
+    # Override command from image to make this container stop right after it was built and upped
+    command: echo "PHP-FPM Base built successfully"
+    image: typo3-php-fpm:base
+    container_name: typo3-php-fpm-base
+
+  typo3-php-fpm:
+    container_name: typo3-php-fpm
+    depends_on:
+      - typo3-mysql-main
+      - typo3-mysql-sys
+      - typo3-mysql-index
+      - typo3-redis
+      - typo3-php-fpm-base
+    #user: www-data
+
+volumes:
+  typo3-main-db:
+  typo3-sys-db:
+  typo3-index-db:

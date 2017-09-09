@@ -1,0 +1,27 @@
+/.idea/
+/bin/
+/backup/
+/composer-cache/
+# Ignore override, which is exected to be a symink
+/docker/docker-compose.override.yml
+/docker/.env
+/vendor/
+# Ignore several upload and file directories.
+/web/fileadmin/
+/web/uploads/
+#/web/typo3conf/AdditionalConfiguration.php
+/web/index.php
+/web/typo3
+/web/typo3conf/context/_development_custom.php
+/web/typo3conf/l10n/
+/web/typo3conf/ENABLE_INSTALL_TOOL
+/web/typo3conf/deprecation_*
+/web/typo3conf/ext/content_defender/
+/web/typo3conf/ext/error404page/
+/web/typo3conf/ext/my_redirects/
+/web/typo3conf/ext/typoscript_rendering/
+/web/typo3conf/ext/vhs/
+/web/typo3conf/ext/realurl/
+/web/typo3temp/
+/docker/ff3817bf92e5
+/docker/Using

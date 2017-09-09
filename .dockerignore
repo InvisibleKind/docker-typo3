@@ -1,0 +1,10 @@
+.git/
+.idea/
+.DS_Store/
+backup/
+composer-cache/
+web/fileadmin
+web/typo3conf/l10n
+web/typo3temp
+web/uploads
+.gitignore

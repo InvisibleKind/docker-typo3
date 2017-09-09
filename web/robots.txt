@@ -1,0 +1,12 @@
+User-agent: *
+
+# Only allow URLs generated with RealURL
+Disallow: /*?id=*
+Disallow: /*&id=*
+
+# Should always be protected (.htaccess)
+Disallow: /*/Private/*
+Disallow: /*/Configuration/*
+
+Disallow: /typo3temp/*
+Allow: /typo3temp/assets/*

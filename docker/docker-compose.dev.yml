@@ -1,0 +1,31 @@
+version: '2'
+
+services:
+  typo3-mysql-main:
+    ports:
+      - "1027:3306"
+    command: mysqld --log-queries-not-using-indexes
+
+  typo3-mysql-sys:
+    ports:
+      - "1028:3306"
+
+  typo3-mysql-index:
+    ports:
+      - "1029:3306"
+
+  typo3-webserver:
+    ports:
+      - "1026:80"
+
+  typo3-php-fpm:
+    build:
+      context: ./php-fpm/dev
+    environment:
+      - TYPO3_CONTEXT=Development
+    # Needed for php-fpm slowlog tracing
+    cap_add:
+      - SYS_PTRACE
+    volumes:
+      - ..:/var/www/docker-typo3
+      - ./php-fpm/dev/php-ini-overrides.ini:/etc/php/7.1/fpm/conf.d/99-overrides.ini
